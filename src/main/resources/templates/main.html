@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
+
+</head>
+<body>
+
+<div ng-app="myApp" ng-controller="MyController">
+    <input type="text" ng-model="param1" placeholder="Parameter 1">
+    <input type="number" ng-model="param2" placeholder="Parameter 2">
+    <button ng-click="fetchImages()">Fetch Images</button>
+    <h4>{{hint}}</h4>
+
+<!--    <p style="color: green" >{{test}}</p>-->
+
+    <div ng-repeat="image in images">
+        <img ng-src="{{ 'data:image/png;base64,' + image }}" alt="Image">
+        <p>{{image}}</p>
+    </div>
+</div>
+
+<!--<div ng-app="myApp" ng-controller="MyController" ng-show="currentIndex == $index" >-->
+
+
+<!--</div>-->
+<script>
+   var app = angular.module('myApp', []);
+        app.controller('MyController',function ($scope, $http) {
+            $scope.param1 = '';
+            $scope.param2 = 0;
+            $scope.images = [];
+            $scope.hint = "please enter";
+
+            $scope.fetchImages = function() {
+                $scope.hint = "loading.......";
+                $http.get('/bot/images', { params: { prompt: $scope.param1, n: $scope.param2 } })
+                    .then(function(response) {
+                        $scope.images = response.data;
+                        $scope.hint = "images: ";
+                    });
+            };
+        })
+
+
+
+</script>
+
+</body>
+</html>
